@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+      args:
+        HOST_UID: 1000
+    image: vertex-it/laravel:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./.docker/services.d:/etc/services.d
+      - .:/var/www/html
