@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# TODO check if needed
+# Source the ".env" file so Laravel's environment variables are available...
+if [ -f ./.env ]; then
+    source ./.env
+fi
+
+export APP_PORT=${APP_PORT:-80}
+export APP_SERVICE=${APP_SERVICE:-"app"}
+export DB_PORT=${DB_PORT:-3306}
+export HOST_UID=$(id -u)
+
+case "$1" in
+    start | up)
+        docker-compose up -d
+        ;;
+    stop | down)
+        docker-compose down
+        ;;
+    restart)
+        docker-compose down && docker-compose up -d
+        ;;
+    build)
+        docker-compose build "${@:2}"
+        ;;
+    destroy)
+        read -p "This will delete containers, volumes and images. Are you sure? [y/N]: " -r
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then exit; fi
+        docker-compose down -v --rmi all --remove-orphans
+        ;;
+    art | artisan)
+        docker-compose exec -u demouser "$APP_SERVICE" php artisan "${@:2}"
+        ;;
+    logs)
+        docker-compose logs -f "${@:2}"
+        ;;
+    shell)
+        docker-compose exec -u demouser "$APP_SERVICE" sh
+        ;;
+    tinker)
+        docker-compose exec -u demouser "$APP_SERVICE" php artisan tinker
+        ;;
+    composer)
+        docker-compose exec -u demouser "$APP_SERVICE" composer "${@:2}"
+        ;;
+    *)
+        cat << EOF
+
+Command line interface for the Docker-based web development environment demo.
+
+Usage:
+    demo <command> [options] [arguments]
+
+Available commands:
+    artisan ................................... Run an Artisan command
+    build [image] ............................. Build all of the images or the specified one
+    composer .................................. Run a Composer command
+    destroy ................................... Remove the entire Docker environment
+    down [-v] ................................. Stop and destroy all containers
+                                                Options:
+                                                    -v .................... Destroy the volumes as well
+    init ...................................... Initialise the Docker environment and the application
+    logs [container] .......................... Display and tail the logs of all containers or the specified one's
+    restart ................................... Restart the containers
+    start ..................................... Start the containers
+    stop ...................................... Stop the containers
+    update .................................... Update the Docker environment
+    yarn ...................................... Run a Yarn command
+
+EOF
+        exit 1
+        ;;
+esac
