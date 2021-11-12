@@ -6,10 +6,19 @@ services:
       context: .
       dockerfile: .docker/Dockerfile
       args:
-        HOST_UID: 1000
+        HOST_UID: '${HOST_UID}'
     image: vertex-it/laravel:latest
     ports:
-      - "80:80"
+      - '${APP_PORT:-80}:80'
     volumes:
       - ./.docker/services.d:/etc/services.d
       - .:/var/www/html
+
+  # Scheduler Service
+  scheduler:
+    image: mcuadros/ofelia:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./.docker/scheduler/config.ini:/etc/ofelia/config.ini
+    depends_on:
+      - app
