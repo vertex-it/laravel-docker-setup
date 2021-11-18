@@ -1,24 +1,29 @@
-version: '3'
-
 services:
-  app:
-    build:
-      context: .
-      dockerfile: .docker/Dockerfile
-      args:
-        HOST_UID: '${HOST_UID}'
-    image: vertex-it/laravel:latest
-    ports:
-      - '${APP_PORT:-80}:80'
-    volumes:
-      - ./.docker/services.d:/etc/services.d
-      - .:/var/www/html
+    app:
+        image: milepanic/s6-nginx-laravel:latest
+        depends_on:
+            - mysql
 
-  # Scheduler Service
-  scheduler:
-    image: mcuadros/ofelia:latest
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./.docker/scheduler/config.ini:/etc/ofelia/config.ini
-    depends_on:
-      - app
+    # TODO https://github.com/adiachenko/docker-image-php-nginx#cron-schedule
+    ofelia:
+        image: mcuadros/ofelia:v0.3.6
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./.docker/scheduler/config.ini:/etc/ofelia/config.ini
+        depends_on:
+            - app
+
+    mysql:
+        image: mysql:8.0.27
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ROOT_HOST: "%"
+            MYSQL_DATABASE: '${DB_DATABASE}'
+            MYSQL_USER: '${DB_USERNAME}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        volumes:
+            - mysqldata:/var/lib/mysql
+
+volumes:
+    mysqldata:

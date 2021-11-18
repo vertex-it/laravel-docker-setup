@@ -1,0 +1,10 @@
+services:
+    app:
+        ports:
+            - '80:80'
+        environment:
+            APP_ENV: 'production'
+            XDEBUG_ENABLE: 'false'
+
+volumes:
+    mysqldata:
