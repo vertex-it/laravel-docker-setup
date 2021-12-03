@@ -7,8 +7,6 @@ services:
                 APP_ENV: 'local'
                 HOST_UID: '${HOST_UID}'
                 XDEBUG_ENABLE: '${XDEBUG_ENABLE:-false}'
-        ports:
-            - '${APP_PORT:-80}:80'
         volumes:
             - ./.docker/s6-overlay/services.d:/etc/services.d
             - .:/var/www/html
