@@ -16,14 +16,14 @@ Script to easily add docker code infrastructure to your project.
 2. Add executable permission
 
    ```bash
-   chmod +x dockerize.sh
+   chmod +x ~/.vertex-it/dockerize.sh
    ```
 
 3. Create script alias (zsh shell)
 
    ```bash
-echo "\n# dockerize script\nalias dockerize=\"~/.vertex-it/dockerize.sh\"" >> ~/.zshrc
-    ```
+   echo "\n# dockerize script\nalias dockerize=\"~/.vertex-it/dockerize.sh\"" >> ~/.zshrc
+   ```
 
 Script can be started by command `dockerize`
 
