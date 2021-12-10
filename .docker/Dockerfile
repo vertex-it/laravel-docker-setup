@@ -53,6 +53,8 @@ COPY .docker/nginx/nginx.conf /etc/nginx/nginx.conf
 # TODO Could be named php.conf instead of default.conf?
 COPY .docker/nginx/php.conf /etc/nginx/conf.d/default.conf
 
+COPY .docker/php/dev-php.ini /usr/local/etc/php/php.ini
+
 COPY .docker/php/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Adding the opcache configuration into the wrong directory intentionally.
