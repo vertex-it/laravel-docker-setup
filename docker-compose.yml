@@ -1,6 +1,5 @@
 services:
     app:
-        image: milepanic/s6-nginx-laravel:latest
         depends_on:
             - mysql
             - traefik
