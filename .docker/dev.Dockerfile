@@ -45,21 +45,14 @@ RUN if [ "$XDEBUG_ENABLE" = "true" ]; then \
 	mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini.disabled; \
 	fi
 
-
 # ------------------------ start fpm/nginx ------------------------
-
 COPY .docker/s6-overlay/services.d /etc/services.d
 COPY .docker/nginx/nginx.conf /etc/nginx/nginx.conf
 # TODO Could be named php.conf instead of default.conf?
 COPY .docker/nginx/php.conf /etc/nginx/conf.d/default.conf
 
-COPY .docker/php/dev-php.ini /usr/local/etc/php/php.ini
-
+COPY .docker/php/dev/php.ini /usr/local/etc/php/php.ini
 COPY .docker/php/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
-
-# Adding the opcache configuration into the wrong directory intentionally.
-# This is enabled at runtime
-ADD .docker/php/opcache.ini /usr/local/etc/php/opcache_disabled.ini
 
 ADD .docker/nginx/healthcheck.ini /usr/local/etc/php/healthcheck.ini
 
@@ -71,14 +64,6 @@ RUN adduser --disabled-password --gecos "" --uid $HOST_UID demouser
 
 # TODO chown needed?
 ADD --chown=demouser:demouser . /var/www/html
-
-# ------------------------ change file permission ------------------------
-RUN if [ "$APP_ENV" = "production" ]; then \
-    find /var/www/html -type d -exec chmod -R 555 {} \; \
-        && find /var/www/html -type f -exec chmod -R 444 {} \; \
-        && find /var/www/html/storage /var/www/html/bootstrap/cache -type d -exec chmod -R 755 {} \; \
-        && find /var/www/html/storage /var/www/html/bootstrap/cache -type f -exec chmod -R 644 {}; \
-    fi
 
 EXPOSE 80
 
