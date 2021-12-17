@@ -1,8 +1,5 @@
 services:
     app:
-        depends_on:
-            - mysql
-            - traefik
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.nginx.rule=Host(`${APP_URL}`)"
@@ -10,6 +7,8 @@ services:
 #            - "traefik.http.routers.nginx.entrypoints=websecure"
 #            - "traefik.http.routers.nginx.tls=true" # for https
 #            - "traefik.http.routers.nginx.tls.certresolver=staging"
+        depends_on:
+            - mysql
 
     traefik:
         image: "traefik:v2.5"
@@ -19,6 +18,8 @@ services:
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock:ro"
             - "./.docker/traefik:/etc/traefik"
+        depends_on:
+            - app
 
     mysql:
         image: mysql:8.0.27
