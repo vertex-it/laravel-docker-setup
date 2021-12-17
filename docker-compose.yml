@@ -1,6 +1,9 @@
 services:
     app:
         labels:
+            - "ofelia.enabled=true"
+            - "ofelia.job-exec.schedule.schedule=@every 60s"
+            - "ofelia.job-exec.schedule.command=php artisan schedule:run"
             - "traefik.enable=true"
             - "traefik.http.routers.nginx.rule=Host(`${APP_URL}`)"
             - "traefik.http.routers.nginx.entrypoints=web"
@@ -33,12 +36,11 @@ services:
         volumes:
             - mysqldata:/var/lib/mysql
 
-    # TODO https://github.com/adiachenko/docker-image-php-nginx#cron-schedule
     ofelia:
         image: mcuadros/ofelia:v0.3.6
+        command: daemon --docker
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - ./.docker/scheduler/config.ini:/etc/ofelia/config.ini
         depends_on:
             - app
 
