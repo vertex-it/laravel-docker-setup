@@ -14,19 +14,9 @@ services:
             APP_ENV: 'local'
             XDEBUG_ENABLE: '${XDEBUG_ENABLE:-false}'
 
-    mysql:
-        image: mysql:8
-        ports:
-            - '${DB_PORT:-3306}:3306'
-        environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ROOT_HOST: "%"
-            MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ALLOW_EMPTY_PASSWORD: 1
-        volumes:
-            - mysqldata:/var/lib/mysql
+#    mysql:
+#        ports:
+#            - '${DB_PORT:-3306}:3306'
 
 #    npm:
 #        image: node:16.13-alpine3.14
@@ -39,6 +29,3 @@ services:
 #    testdb:
 #        image: mysql:8
 #        tmpfs: /var/lib/mysql
-
-volumes:
-    mysqldata:
