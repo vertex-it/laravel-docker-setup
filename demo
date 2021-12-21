@@ -77,6 +77,15 @@ env () {
     fi
 }
 
+makeProject () {
+    docker run -u ${UID}:${UID} --rm -v $(pwd):/app -w /app composer composer create-project --prefer-dist laravel/laravel laravel-app
+
+    shopt -s dotglob nullglob
+
+    mv ./laravel-app/* .
+    rm -rf laravel-app
+}
+
 case "$1" in
     start | up)
         start
@@ -116,6 +125,9 @@ case "$1" in
             && artisan key:generate --ansi \
             && artisan migrate \
             && start
+        ;;
+    make-project)
+        makeProject
         ;;
     *)
         cat << EOF
