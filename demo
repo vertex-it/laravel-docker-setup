@@ -24,6 +24,11 @@ artisan () {
     dockerCompose exec -u dkuser "$APP_SERVICE" php artisan "${@:1}"
 }
 
+# Run npm command
+npm () {
+    dockerCompose exec -u dkuser "$APP_SERVICE" npm "${@:1}"
+}
+
 # Build all of the images or the specified one
 build () {
     dockerCompose build "${@:1}"
@@ -104,6 +109,9 @@ case "$1" in
         ;;
     art | artisan)
         artisan "${@:2}"
+        ;;
+    npm)
+        npm "${@:2}"
         ;;
     logs)
         dockerCompose logs -f "${@:2}"
