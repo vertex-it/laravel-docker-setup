@@ -60,18 +60,15 @@ ADD .docker/nginx/healthcheck.ini /usr/local/etc/php/healthcheck.ini
 RUN rm -rf /var/cache/apk/* && \
         rm -rf /tmp/*
 
-# ------------------------ create user based on provided user id ------------------------
-RUN adduser --disabled-password --gecos "" --uid $HOST_UID demouser
+COPY --from=composer:2.1.12 /usr/bin/composer /usr/bin/composer
 
-# TODO chown needed?
-ADD --chown=demouser:demouser . /var/www/html
+COPY --chown=www-data --from=composer-build /var/www/html/vendor/ /var/www/html/vendor/
+COPY --chown=www-data --from=npm-build /var/www/html/public/ /var/www/html/public/
+COPY --chown=www-data . /var/www/html/
 
-# ------------------------ change file permission ------------------------
-RUN \
-    find /var/www/html -type d -exec chmod -R 555 {} \; \
-        && find /var/www/html -type f -exec chmod -R 444 {} \; \
-        && find /var/www/html/storage /var/www/html/bootstrap/cache -type d -exec chmod -R 755 {} \; \
-        && find /var/www/html/storage /var/www/html/bootstrap/cache -type f -exec chmod -R 644 {};
+RUN composer dumpautoload -o \
+    && composer check-platform-reqs \
+    && rm -f /usr/bin/composer
 
 EXPOSE 80
 
