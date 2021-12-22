@@ -11,8 +11,6 @@ ARG XDEBUG_ENABLE
 ENV APP_ENV ${APP_ENV}
 ENV XDEBUG_ENABLE ${XDEBUG_ENABLE}
 
-COPY --from=composer:2.1.12 /usr/bin/composer /usr/bin/composer
-
 # ------------------------ Nginx & Common PHP Dependencies ------------------------
 RUN apk update && apk add \
         nginx \
@@ -24,18 +22,17 @@ RUN apk update && apk add \
 		$PHPIZE_DEPS \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     # Installing common Laravel dependencies
-    && docker-php-ext-install mbstring pdo_mysql gd \
-    	# Adding opcache
-    	opcache \
-    && mkdir -p /home/www-data/.composer/cache \
-    && chown -R www-data:www-data /home/www-data/ /var/www/html
+    && docker-php-ext-install mbstring pdo_mysql gd
 
-# ------------------------ add s6 ------------------------
+# ------------------------ Composer ------------------------
+COPY --from=composer:2.1.12 /usr/bin/composer /usr/bin/composer
+
+# ------------------------ Add s6 overlay ------------------------
 ADD https://github.com/just-containers/s6-overlay/releases/download/v2.1.0.2/s6-overlay-amd64-installer /tmp/
 RUN chmod +x /tmp/s6-overlay-amd64-installer && /tmp/s6-overlay-amd64-installer /
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
-# ------------------------ xdebug ------------------------
+# ------------------------ Install xdebug if enabled ------------------------
 RUN if [ "$XDEBUG_ENABLE" = "true" ]; then \
 	pecl install xdebug-3.0.0; \
     docker-php-ext-enable xdebug; \
@@ -45,10 +42,9 @@ RUN if [ "$XDEBUG_ENABLE" = "true" ]; then \
 	mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini.disabled; \
 	fi
 
-# ------------------------ start fpm/nginx ------------------------
+# ------------------------ Start php-fpm & nginx ------------------------
 COPY .docker/s6-overlay/services.d /etc/services.d
 COPY .docker/nginx/nginx.conf /etc/nginx/nginx.conf
-# TODO Could be named php.conf instead of default.conf?
 COPY .docker/nginx/php.conf /etc/nginx/conf.d/default.conf
 
 COPY .docker/php/dev/php.ini /usr/local/etc/php/php.ini
@@ -59,11 +55,9 @@ ADD .docker/nginx/healthcheck.ini /usr/local/etc/php/healthcheck.ini
 RUN rm -rf /var/cache/apk/* && \
         rm -rf /tmp/*
 
-# ------------------------ create user based on provided user id ------------------------
-RUN adduser --disabled-password --gecos "" --uid $HOST_UID demouser
-
-# TODO chown needed?
-ADD --chown=demouser:demouser . /var/www/html
+# ------------------------ Create user based on provided user id and chown all files ------------------------
+RUN adduser --disabled-password --gecos "" --uid $HOST_UID dkuser \
+    && chown -R dkuser:dkuser /var/www/html
 
 EXPOSE 80
 

@@ -4,14 +4,12 @@ services:
             context: .
             dockerfile: .docker/dev.Dockerfile
             args:
-                APP_ENV: 'local'
                 HOST_UID: '${HOST_UID}'
                 XDEBUG_ENABLE: '${XDEBUG_ENABLE:-false}'
         volumes:
             - ./.docker/s6-overlay/services.d:/etc/services.d
             - .:/var/www/html
         environment:
-            APP_ENV: 'local'
             XDEBUG_ENABLE: '${XDEBUG_ENABLE:-false}'
 
 #    mysql:

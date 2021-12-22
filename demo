@@ -21,7 +21,7 @@ dockerCompose () {
 
 # Run an Artisan command
 artisan () {
-    dockerCompose exec -u demouser "$APP_SERVICE" php artisan "${@:1}"
+    dockerCompose exec -u dkuser "$APP_SERVICE" php artisan "${@:1}"
 }
 
 # Build all of the images or the specified one
@@ -109,13 +109,13 @@ case "$1" in
         dockerCompose logs -f "${@:2}"
         ;;
     shell)
-        dockerCompose exec -u demouser "$APP_SERVICE" sh
+        dockerCompose exec -u dkuser "$APP_SERVICE" sh
         ;;
     tinker)
-        dockerCompose exec -u demouser "$APP_SERVICE" php artisan tinker
+        dockerCompose exec -u dkuser "$APP_SERVICE" php artisan tinker
         ;;
     composer)
-        dockerCompose exec -u demouser "$APP_SERVICE" composer "${@:2}"
+        dockerCompose exec -u dkuser "$APP_SERVICE" composer "${@:2}"
         ;;
     init)
         env \
