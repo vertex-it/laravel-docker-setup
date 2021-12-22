@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine3.13
+FROM php:8.0-fpm-alpine3.15
 
 LABEL maintainer="Mile Panić"
 
@@ -20,6 +20,8 @@ RUN apk update && apk add \
         libpng-dev libjpeg-turbo-dev \
 		# needed for xdebug
 		$PHPIZE_DEPS \
+        # install node & npm
+        nodejs npm \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     # Installing common Laravel dependencies
     && docker-php-ext-install mbstring pdo_mysql gd
