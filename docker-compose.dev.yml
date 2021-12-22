@@ -7,7 +7,6 @@ services:
                 HOST_UID: '${HOST_UID}'
                 XDEBUG_ENABLE: '${XDEBUG_ENABLE:-false}'
         volumes:
-            - ./.docker/s6-overlay/services.d:/etc/services.d
             - .:/var/www/html
         environment:
             XDEBUG_ENABLE: '${XDEBUG_ENABLE:-false}'
@@ -15,14 +14,6 @@ services:
 #    mysql:
 #        ports:
 #            - '${DB_PORT:-3306}:3306'
-
-#    npm:
-#        image: node:16.13-alpine3.14
-#        user: node
-#        volumes:
-#            - ./:/assets
-#        working_dir: /assets
-#        entrypoint: ['npm', '--no-bin-links']
 
 #    testdb:
 #        image: mysql:8

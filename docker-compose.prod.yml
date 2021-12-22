@@ -1,8 +1,6 @@
 services:
     app:
-        environment:
-            APP_ENV: 'production'
-            XDEBUG_ENABLE: 'false'
+        image: repo_user/repo_name:tag
 
 volumes:
     mysqldata:

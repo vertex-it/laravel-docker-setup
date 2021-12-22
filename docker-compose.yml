@@ -14,7 +14,7 @@ services:
             - mysql
 
     traefik:
-        image: "traefik:v2.5"
+        image: traefik:v2.5
         ports:
             - "80:80"
             - "8080:8080"
