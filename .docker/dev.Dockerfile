@@ -5,10 +5,8 @@ LABEL maintainer="Mile Panić"
 WORKDIR /var/www/html
 
 ARG HOST_UID
-ARG APP_ENV
 ARG XDEBUG_ENABLE
 
-ENV APP_ENV ${APP_ENV}
 ENV XDEBUG_ENABLE ${XDEBUG_ENABLE}
 
 # ------------------------ Nginx & Common PHP Dependencies ------------------------
@@ -50,7 +48,7 @@ COPY .docker/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY .docker/nginx/php.conf /etc/nginx/conf.d/default.conf
 
 COPY .docker/php/dev/php.ini /usr/local/etc/php/php.ini
-COPY .docker/php/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+COPY .docker/php/dev/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
 ADD .docker/nginx/healthcheck.ini /usr/local/etc/php/healthcheck.ini
 
