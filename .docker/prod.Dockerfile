@@ -1,5 +1,5 @@
 # Install composer dependencies
-FROM composer:2.1.12 AS composer-build
+FROM composer:2.1.12 AS composer-builder
 
 WORKDIR /var/www/html
 
@@ -9,7 +9,7 @@ RUN mkdir -p /var/www/html/database/{factories,seeds} \
     && composer install --no-dev --prefer-dist --no-scripts --no-autoloader --no-progress --ignore-platform-reqs
 
 # Install NPM dependencies
-FROM node:16 AS npm-build
+FROM node:16 AS npm-builder
 
 WORKDIR /var/www/html
 
@@ -20,7 +20,8 @@ COPY public /var/www/html/public/
 RUN npm ci
 RUN npm run production
 
-FROM php:8.0-fpm-alpine3.15
+# Build production image
+FROM php:8.0-fpm-alpine3.15 as final
 
 LABEL maintainer="Mile Panić"
 
@@ -62,15 +63,30 @@ RUN rm -rf /var/cache/apk/* && \
 
 COPY --from=composer:2.1.12 /usr/bin/composer /usr/bin/composer
 
-COPY --chown=www-data --from=composer-build /var/www/html/vendor/ /var/www/html/vendor/
-COPY --chown=www-data --from=npm-build /var/www/html/public/ /var/www/html/public/
+COPY --chown=www-data --from=composer-builder /var/www/html/vendor/ /var/www/html/vendor/
+COPY --chown=www-data --from=npm-builder /var/www/html/public/ /var/www/html/public/
 COPY --chown=www-data . /var/www/html/
 
 RUN composer dumpautoload -o \
     && composer check-platform-reqs \
-    && rm -f /usr/bin/composer
-
-EXPOSE 80
+    && rm -f /usr/bin/composer \
+    && rm -rf tests
 
 ENTRYPOINT ["/init"]
-CMD []
+
+# Testing stage for CI
+FROM final as testing
+
+LABEL test="true"
+
+COPY ./tests /var/www/html/tests/
+COPY --from=final /var/www/html/ /var/www/html/
+
+RUN apk update && apk add pcre-dev ${PHPIZE_DEPS} \
+  && pecl install xdebug \
+  && docker-php-ext-enable xdebug \
+  && apk del pcre-dev ${PHPIZE_DEPS} \
+  && echo "[xdebug]xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+COPY --from=composer:2.1.12 /usr/bin/composer /usr/bin/composer
+RUN composer require phpunit/phpunit:^9.5
