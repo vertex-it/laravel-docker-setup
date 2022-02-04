@@ -13,7 +13,7 @@ services:
 
     mysql:
         ports:
-            - '3306:3306'
+            - '${FORWARD_DB_PORT:-3306}:3306'
 
 #    testdb:
 #        image: mysql:8
