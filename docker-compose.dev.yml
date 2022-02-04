@@ -11,9 +11,9 @@ services:
         environment:
             XDEBUG_ENABLE: '${XDEBUG_ENABLE:-false}'
 
-#    mysql:
-#        ports:
-#            - '${DB_PORT:-3306}:3306'
+    mysql:
+        ports:
+            - '3306:3306'
 
 #    testdb:
 #        image: mysql:8

@@ -6,7 +6,7 @@ echo "Starting to dockerize..."
 
 git clone --depth=1 -q $REPO_URL dockerize
 
-rm -rf ./dockerize/.git ./dockerize/README.md ./dockerize/dockerize.sh
+rm ./dockerize/.git ./dockerize/README.md ./dockerize/dockerize.sh
 
 shopt -s dotglob nullglob
 mv ./dockerize/* .
