@@ -18,3 +18,10 @@ services:
 #    testdb:
 #        image: mysql:8
 #        tmpfs: /var/lib/mysql
+
+    localtunnel:
+        build:
+            context: ./.docker/localtunnel
+        command: "usr/local/bin/lt --port 80 --local-host app"
+        depends_on:
+            - app

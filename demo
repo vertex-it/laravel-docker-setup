@@ -125,6 +125,9 @@ case "$1" in
     composer)
         dockerCompose exec -u dkuser "$APP_SERVICE" composer "${@:2}"
         ;;
+    localtunnel | share)
+        dockerCompose logs localtunnel | grep "loca.lt"
+        ;;
     init)
         env \
             && down -v \
