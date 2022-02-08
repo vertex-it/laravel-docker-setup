@@ -12,7 +12,7 @@ Script to easily add docker code infrastructure to your project.
 1. Download script
 
    ```bash
-   curl https://raw.githubusercontent.com/vertex-it/laravel-docker-setup/master/dockerize.sh?token=AE4YUUJDNRF7UGMIAYZ6XOLBWNPN2 --output ~/.vertex-it/dockerize.sh
+   curl https://raw.githubusercontent.com/vertex-it/laravel-docker-setup/master/dockerize.sh?token=AE4YUUJDNRF7UGMIAYZ6XOLBWNPN2 --output ~/.vertex-it/dockerize.sh --create-dirs
    ```
 
 2. Add executable permission
