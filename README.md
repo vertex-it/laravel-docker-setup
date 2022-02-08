@@ -36,7 +36,7 @@ Script can be started by command `dockerize`
 2. Optional - add `ver` script alias
 
    ```bash
-   echo "\nalias ver=\"./ver.sh\"" >> ~/.zshrc
+   echo "\nalias ver=\"./ver\"" >> ~/.zshrc
    ```
 
 ### Install Laravel project
