@@ -43,11 +43,11 @@ Script can be started by command `dockerize`
 
 1. `ver make-project`
 2. Set up .env file
-    - APP_URL must not be `http://localhost`, it can be `localhost`
+    - Change APP_URL to `example-project.test`. APP_URL must not contain "http" or "https"
     - DB_USERNAME must not bee root
     - XDEBUG_ENABLE can be added, accepted values are "true" and "false"
-3. `ver start`
-
+3. Start the project with `ver start`
+4. Export APP_URL to /etc/hosts with `ver hosts`
 
 ## Production setup
 
