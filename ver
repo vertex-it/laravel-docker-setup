@@ -115,6 +115,9 @@ case "$1" in
     restart)
         stop && start
         ;;
+    docker-compose)
+        dockerCompose "${@:2}"
+        ;;
     build)
         build "${@:2}"
         ;;
