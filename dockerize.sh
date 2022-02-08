@@ -13,4 +13,4 @@ mv ./dockerize/* .
 
 rm -rf ./dockerize
 
-echo 'Done. Enter the command "./demo" to run the CLI.'
+echo 'Done. Enter the command "./ver" to run the CLI.'

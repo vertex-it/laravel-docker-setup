@@ -33,20 +33,20 @@ Script can be started by command `dockerize`
 
 1. In the root of the project run `dockerize`
 
-2. Optional - add `demo` script alias
+2. Optional - add `ver` script alias
 
    ```bash
-   echo "\nalias demo=\"./demo.sh\"" >> ~/.zshrc
+   echo "\nalias ver=\"./ver.sh\"" >> ~/.zshrc
    ```
 
 ### Install Laravel project
 
-1. `demo make-project`
+1. `ver make-project`
 2. Set up .env file
     - APP_URL must not be `http://localhost`, it can be `localhost`
     - DB_USERNAME must not bee root
     - XDEBUG_ENABLE can be added, accepted values are "true" and "false"
-3. `demo start`
+3. `ver start`
 
 
 ## Production setup

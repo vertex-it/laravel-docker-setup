@@ -143,10 +143,10 @@ case "$1" in
     *)
         cat << EOF
 
-Command line interface for the Docker-based web development environment demo.
+Command line interface for the Docker-based Laravel development environment.
 
 Usage:
-    demo <command> [options] [arguments]
+    ver <command> [options] [arguments]
 
 Available commands:
     artisan ................................... Run an Artisan command
