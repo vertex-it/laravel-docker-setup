@@ -105,6 +105,28 @@ hosts () {
           echo "Added to /etc/hosts"
     fi
 }
+
+lint () {
+    if [ ! -d tools/php-cs-fixer/vendor/vertex-it/php-cs ]; then
+        echo "PHP cs fixer is not installed. Visit https://github.com/vertex-it/php-cs and install it, or run \"ver lint-install\"."
+
+        return
+    fi
+
+    dockerCompose run --rm app php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix
+}
+
+lintInstall () {
+    echo "Installing vertex-it/php-cs"
+
+    mkdir --parents tools/php-cs-fixer
+    composer require --working-dir=tools/php-cs-fixer vertex-it/php-cs
+
+    cp tools/php-cs-fixer/vendor/vertex-it/php-cs/src/.php-cs-fixer.dist.php .php-cs-fixer.dist.php
+
+    echo "Done. Run \"ver lint\" to run cs fixer"
+}
+
 case "$1" in
     start | up)
         start
@@ -147,6 +169,12 @@ case "$1" in
         ;;
     hosts)
         hosts
+        ;;
+    lint)
+        lint
+        ;;
+    lint-install)
+        lintInstall
         ;;
     init)
         env \
