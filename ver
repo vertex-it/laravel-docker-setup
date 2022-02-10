@@ -36,7 +36,7 @@ build () {
 
 # Run a Composer command
 composer () {
-    dockerCompose run --rm backend composer "${@:1}"
+    dockerCompose run -u ${UID}:${UID} --rm "$APP_SERVICE" composer "${@:1}"
 }
 
 # Remove the entire Docker environment
