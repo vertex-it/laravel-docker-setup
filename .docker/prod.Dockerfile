@@ -33,7 +33,7 @@ RUN apk update && apk add \
         # see https://github.com/docker-library/php/issues/880
         oniguruma-dev \
         # needed for gd
-        libpng-dev libjpeg-turbo-dev \
+        freetype-dev libpng-dev libjpeg-turbo-dev \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     # Installing common Laravel dependencies
     && docker-php-ext-install mbstring pdo_mysql gd \
