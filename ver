@@ -63,7 +63,7 @@ restart () {
 
 # Start the containers
 start () {
-    dockerCompose up -d
+    dockerCompose up -d --remove-orphans
 }
 
 # Stop the containers
