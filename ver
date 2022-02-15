@@ -71,6 +71,10 @@ stop () {
     dockerCompose stop
 }
 
+exec () {
+    dockerCompose exec "${@:1}"
+}
+
 # Run a Yarn command
 yarn () {
     dockerCompose run --rm frontend yarn "${@:1}"
@@ -157,6 +161,9 @@ case "$1" in
         ;;
     shell)
         dockerCompose exec -u dkuser "$APP_SERVICE" sh
+        ;;
+    exec)
+        exec "${@:2}"
         ;;
     tinker)
         dockerCompose exec -u dkuser "$APP_SERVICE" php artisan tinker
