@@ -99,11 +99,11 @@ hosts () {
     read -p "This command will add your app url to /etc/hosts. Are you sure? [y/n]: " -r
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then exit; fi
 
-    app_url="$(cat .env | grep 'APP_URL' | cut -d '=' -f2)"
+    app_url="$(cat .env | grep 'APP_SHORT_URL' | cut -d '=' -f2)"
 
     if [ -z "$app_url" ]
     then
-          echo "APP_URL is empty. Aborting."
+          echo "APP_SHORT_URL is empty. Aborting."
     else
           echo "127.0.0.1	$app_url" | sudo tee -a /etc/hosts
           echo "Added to /etc/hosts"

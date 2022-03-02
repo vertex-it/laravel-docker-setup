@@ -5,7 +5,7 @@ services:
             - "ofelia.job-exec.schedule.schedule=@every 60s"
             - "ofelia.job-exec.schedule.command=php artisan schedule:run"
             - "traefik.enable=true"
-            - "traefik.http.routers.nginx.rule=Host(`${APP_URL}`)"
+            - "traefik.http.routers.nginx.rule=Host(`${APP_SHORT_URL}`)"
             - "traefik.http.routers.nginx.entrypoints=web"
 #            - "traefik.http.routers.nginx.entrypoints=websecure"
 #            - "traefik.http.routers.nginx.tls=true" # for https

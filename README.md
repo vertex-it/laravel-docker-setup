@@ -41,13 +41,16 @@ Script can be started by command `dockerize`
 
 ### Install Laravel project
 
-1. `ver make-project`
+1. Initialize Laravel project with the command
+```
+ver make-project
+```
 2. Set up .env file
-    - Change APP_URL to `example-project.test`. APP_URL must not contain "http" or "https"
+    - Add APP_SHORT_URL and set it to `example-project.test` or `localhost`. APP_SHORT_URL must not contain "http" or "https"
     - DB_USERNAME must not bee root
     - XDEBUG_ENABLE can be added, accepted values are "true" and "false"
 3. Start the project with `ver start`
-4. Export APP_URL to /etc/hosts with `ver hosts`
+4. Export APP_SHORT_URL to /etc/hosts with `ver hosts`
 
 ## Production setup
 
