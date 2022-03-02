@@ -36,13 +36,13 @@ services:
         volumes:
             - mysqldata:/var/lib/mysql
 
-    ofelia:
-        image: mcuadros/ofelia:v0.3.6
-        command: daemon --docker
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-        depends_on:
-            - app
+#    ofelia:
+#        image: mcuadros/ofelia:v0.3.6
+#        command: daemon --docker
+#        volumes:
+#            - /var/run/docker.sock:/var/run/docker.sock
+#        depends_on:
+#            - app
 
 volumes:
     mysqldata:

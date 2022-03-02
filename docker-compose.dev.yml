@@ -19,9 +19,9 @@ services:
 #        image: mysql:8
 #        tmpfs: /var/lib/mysql
 
-    localtunnel:
-        image: efrecon/localtunnel
-        command:
-            --local-host app --port 80 --subdomain vertex-it-localhost
-        depends_on:
-            - app
+#    localtunnel:
+#        image: efrecon/localtunnel
+#        command:
+#            --local-host app --port 80 --subdomain vertex-it-localhost
+#        depends_on:
+#            - app
