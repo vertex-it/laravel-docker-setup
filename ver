@@ -1,5 +1,8 @@
 #!/bin/bash
 
+color_green='\033[0;32m'
+color_clear='\033[0m'
+
 # TODO check if needed
 # Source the ".env" file so Laravel's environment variables are available...
 if [ -f ./.env ]; then
@@ -184,13 +187,18 @@ case "$1" in
         lintInstall
         ;;
     set-up)
-        env \
-            && down -v \
-            && build \
-            && composer install \
-            && artisan key:generate --ansi \
-            && artisan migrate \
-            && start
+        echo "1) rm -rf .env vendor composer.lock node_modules package-lock.json" && rm -rf .env vendor composer.lock node_modules package-lock.json \
+            && echo "2) cp .env.example .env" && env \
+            && echo "3) docker-compose down -v" && down -v >/dev/null 2>&1 \
+            && echo "4) docker-compose build" && build >/dev/null 2>&1 \
+            && echo "5) docker-compose up -d" && start \
+            && echo "6) composer install" && composer install >/dev/null 2>&1 \
+            && echo "7) php artisan key:generate" && artisan key:generate >/dev/null 2>&1 \
+            && echo "7) php artisan storage:link" && artisan storage:link >/dev/null 2>&1 \
+            && echo "8) php artisan migrate:fresh --seed" && artisan migrate:fresh --seed \
+            && echo "9) npm install" && npm install >/dev/null 2>&1 \
+            && echo "10) npm run dev" && npm run dev >/dev/null 2>&1 \
+            && echo -e "${color_green}Done. Now go to work!${color_clear}"
         ;;
     make-project)
         makeProject
