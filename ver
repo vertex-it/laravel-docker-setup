@@ -13,12 +13,12 @@ export APP_PORT=${APP_PORT:-80}
 export APP_SERVICE=${APP_SERVICE:-"app"}
 export DB_PORT=${DB_PORT:-3306} # TODO remove?
 export HOST_UID
-export APP_URL_SHORT
+export APP_SHORT_URL
 
 HOST_UID=$(id -u)
 
 # Remove http and https from APP_URL
-APP_URL_SHORT=$(echo "${APP_URL:-"localhost"}" | sed "s/https\?:\/\///")
+APP_SHORT_URL=$(echo "${APP_URL:-"localhost"}" | sed "s/https\?:\/\///")
 
 #######################################
 # FUNCTIONS
@@ -108,14 +108,15 @@ hosts () {
     read -p "This command will add your app url to /etc/hosts. Are you sure? [y/n]: " -r
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then exit; fi
 
-    if [ -z "$APP_URL_SHORT" ]
+    if [ -z "$APP_SHORT_URL" ]
     then
-          echo "APP_URL_SHORT is empty. Aborting."
+          echo "APP_SHORT_URL is empty. Aborting."
     else
-          echo "127.0.0.1	$APP_URL_SHORT" | sudo tee -a /etc/hosts
+          echo "127.0.0.1	$APP_SHORT_URL" | sudo tee -a /etc/hosts
           echo "Added to /etc/hosts"
     fi
 }
+
 lint () {
     if [ ! -d tools/php-cs-fixer/vendor/vertex-it/php-cs ]; then
         echo "PHP cs fixer is not installed. Visit https://github.com/vertex-it/php-cs and install it, or run \"ver lint-install\"."

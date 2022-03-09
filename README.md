@@ -46,7 +46,7 @@ Script can be started by command `dockerize`
 ver make-project
 ```
 2. Set up .env file
-    - Add APP_SHORT_URL and set it to `example-project.test` or `localhost`. APP_SHORT_URL must not contain "http" or "https"
+    - Set APP_URL to `http://example-project.test` or `localhost`
     - DB_USERNAME must not bee root
     - XDEBUG_ENABLE can be added, accepted values are "true" and "false"
 3. Start the project with `ver start`
