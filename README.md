@@ -64,3 +64,22 @@ ver make-project
 docker build --target final . --file .docker/prod.Dockerfile
 ```
 - Add env variables to Circle CI: CI_REGISTRY_USER, CI_REGISTRY_PASSWORD
+
+## CircleCI
+
+### Set up project
+
+In CircleCI add env variables in Project settings
+- CI_REGISTRY_USER - dockerhub username
+- CI_REGISTRY_PASSWORD - dockerhub password
+
+### Test coverage badge
+
+To show coverage badge add this code below to your markdown file:
+```
+[![CircleCI](https://circleci.com/gh/<ORGANIZATION>/<PROJECT>/tree/<BRANCH>.svg?style=svg)](https://circleci.com/gh/<ORGANIZATION>/<PROJECT>/tree/<BRANCH>)
+```
+
+If your repo is private:
+- CircleCI project settings > API Permissions > Add API Token with scope "Status"
+- Add `&circle-token=<TOKEN>` after `?style=svg`
