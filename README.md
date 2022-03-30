@@ -3,7 +3,7 @@
 Production and development Docker setup used for Laravel.
 Uses s6 overlay and php-fpm/nginx in the same image.
 
-## How to run dev setup
+## Dev setup
 
 ### Download dockerize.sh script
 
@@ -12,7 +12,7 @@ Script to easily add docker code infrastructure to your project.
 1. Download script
 
    ```bash
-   curl https://raw.githubusercontent.com/vertex-it/laravel-docker-setup/master/dockerize.sh?token=AE4YUUJDNRF7UGMIAYZ6XOLBWNPN2 --output ~/.vertex-it/dockerize.sh --create-dirs
+   curl https://raw.githubusercontent.com/vertex-it/laravel-docker-setup/master/dockerize.sh --output ~/.vertex-it/dockerize.sh --create-dirs
    ```
 
 2. Add executable permission
@@ -50,20 +50,15 @@ ver make-project
     - DB_USERNAME must not bee root
     - XDEBUG_ENABLE can be added, accepted values are "true" and "false"
 3. Start the project with `ver start`
-4. Export APP_SHORT_URL to /etc/hosts with `ver hosts`
+4. Export APP_URL to /etc/hosts with `ver hosts`
 
 ## Production setup
 
-- Add "APP_KEY" to phpunit.xml if missing:
-   ```
-  <server name="APP_KEY" value="base64:TKd6jQxywTLKHf/CBAaZfKcxYmHwg2TTUKEEZKBUuuk=" />
-  ```
 - Remove npm-builder stage from Dockerfile if your project doesn't have any npm dependencies
 - To build the production image specify "final" target from Dockerfile:
 ```
 docker build --target final . --file .docker/prod.Dockerfile
 ```
-- Add env variables to Circle CI: CI_REGISTRY_USER, CI_REGISTRY_PASSWORD
 
 ## Continuous Integration
 
