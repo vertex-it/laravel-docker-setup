@@ -65,9 +65,11 @@ docker build --target final . --file .docker/prod.Dockerfile
 ```
 - Add env variables to Circle CI: CI_REGISTRY_USER, CI_REGISTRY_PASSWORD
 
-## CircleCI
+## Continuous Integration
 
-### Set up project
+To init ci pipelines click "Set Up Project" on [CircleCi](https://app.circleci.com/) in Projects view.
+
+### Add env variables
 
 In CircleCI add env variables in Project settings
 - CI_REGISTRY_USER - dockerhub username
