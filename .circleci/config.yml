@@ -1,9 +1,9 @@
 version: 2.1
 
 parameters:
-    app_image_latest:
+    app_image:
         type: string
-        default: $CI_REGISTRY_USER/$CIRCLE_PROJECT_REPONAME:latest
+        default: $CI_REGISTRY_USER/$CIRCLE_PROJECT_REPONAME
     app_image_versioned:
         type: string
         default: $CI_REGISTRY_USER/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
@@ -13,98 +13,61 @@ executors:
         environment:
             DOCKER_BUILDKIT: "1"
         docker:
-            - image: cimg/php:8.0
-
-            - image: cimg/mysql:8.0
-              environment:
-                  MYSQL_ALLOW_EMPTY_PASSWORD: yes
-                  MYSQL_DATABASE: laravel
-                  MYSQL_USER: user
-                  MYSQL_PASSWORD: secret
+            - image: cimg/base:2021.04
 
 workflows:
     run-ci:
         jobs:
-            - tests
-            - build:
-                requires:
-                    - tests
-                filters:
-                    branches:
-                        only: master
+            - build
 
 jobs:
-    tests:
-        executor: docker-executor
-        steps:
-            - checkout
-            - restore_cache:
-                  keys:
-                      # "composer.lock" can be used if it is committed to the repo
-                      - v1-dependencies-{{ checksum "composer.json" }}
-                      # fallback to using the latest cache if no exact match is found
-                      - v1-dependencies-
-            - run:
-                  name: Install Dependencies
-                  command: composer install -n --prefer-dist
-
-            - save_cache:
-                  key: v1-dependencies-{{ checksum "composer.json" }}
-                  paths:
-                      - ./vendor
-            - run:
-                  name: Create Environment file and generate app key
-                  command: |
-                      cp .env.example .env
-                      php artisan key:generate
-            - run:
-                name: Waiting for MySQL to be ready
-                command: |
-                    for i in `seq 1 10`;
-                    do
-                      nc -z 127.0.0.1 3306 && echo Success && exit 0
-                      echo -n .
-                      sleep 1
-                    done
-                    echo Failed waiting for MySQL && exit 1
-            - run:
-                  name: Run Tests
-                  command: |
-                      phpdbg -qrr vendor/bin/phpunit --coverage-html build/coverage-report
-                  environment:
-                      XDEBUG_MODE: coverage
-            - store_artifacts:
-                  path: build/coverage-report
-
     build:
         executor: docker-executor
         steps:
             - checkout
             - setup_remote_docker:
-                  version: 20.10.7
-                  docker_layer_caching: true
+                  version: 20.10.6
             - run:
-                  name: Build Prod Image
+                  name: Build Images
                   command: |
                       docker build \
                           --target final \
+                          --progress plain \
                           --tag << pipeline.parameters.app_image_versioned >> \
                           . \
                           --file .docker/prod.Dockerfile
-            - run:
-                  name: Build Latest image
-                  command: |
+
                       docker build \
-                        --cache-from << pipeline.parameters.app_image_versioned >> \
-                        --target testing \
-                        --tag << pipeline.parameters.app_image_latest >> \
-                        . \
-                        --file .docker/prod.Dockerfile
+                          --cache-from << pipeline.parameters.app_image_versioned >> \
+                          --target testing \
+                          --progress plain \
+                          --tag app:test \
+                          . \
+                          --file .docker/prod.Dockerfile
             - run:
-                  name: Login to CI Registry
-                  command: docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+                  name: Start Containers
+                  command: docker-compose -f .circleci/docker-compose.ci.yml up -d
+            - run:
+                  name: Run Tests
+                  command: |
+                      docker-compose -f .circleci/docker-compose.ci.yml exec app sh -c "
+                          set -e
+                          cp .circleci/.env.testing .env
+                          php artisan key:generate --force
+                          curl mysql:3306 --http0.9 --retry-connrefused --retry 30 --output /dev/null --silent
+                          ./vendor/bin/phpunit --log-junit testresults.xml
+                      "
+                      docker-compose -f .circleci/docker-compose.ci.yml exec app sh -c "cat testresults.xml" > ~/testresults.xml
+            - run:
+                  name: Run CS Fixer
+                  command: |
+                      docker ps
             - run:
                   name: Push the image to CI Registry
                   command: |
+                      docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
                       docker push << pipeline.parameters.app_image_versioned >>
-                      docker push << pipeline.parameters.app_image_latest >>
+                      docker tag << pipeline.parameters.app_image_versioned >> << pipeline.parameters.app_image >>:latest
+                      docker push << pipeline.parameters.app_image >>:latest
+            - store_artifacts:
+                  path: ~/testresults.xml
