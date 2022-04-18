@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VER_VERSION=1.0.0
+VER_VERSION=1.0.1
 
 if [ -f ./.env ]; then
     source ./.env
@@ -129,12 +129,14 @@ lintInstall () {
 }
 
 version () {
-    LATEST_VERSION=$(curl -s https://raw.githubusercontent.com/vertex-it/laravel-docker-setup/master/ver | grep -m 1 VER_VERSION)
+    VER_SCRIPT_LOCATION="https://raw.githubusercontent.com/vertex-it/laravel-docker-setup/master/ver"
+
+    LATEST_VERSION=$(curl -s $VER_SCRIPT_LOCATION | grep -m 1 VER_VERSION | awk -F '=' '{print $2}')
 
     if [ "$VER_VERSION" == "$LATEST_VERSION" ]; then
         echo "ver script is up to date."
     else
-        echo -e "ver script is out of date.\nYour version is $VER_VERSION - latest version is $LATEST_VERSION"
+        echo -e "ver script is out of date.\nCurrent version: $VER_VERSION - Latest version: $LATEST_VERSION"
     fi
 }
 
