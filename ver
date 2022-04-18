@@ -128,6 +128,16 @@ lintInstall () {
     echo "Done. Run \"ver lint\" to run cs fixer"
 }
 
+version () {
+    LATEST_VERSION=$(curl -s https://raw.githubusercontent.com/vertex-it/laravel-docker-setup/master/ver | grep -m 1 VER_VERSION)
+
+    if [ "$VER_VERSION" == "$LATEST_VERSION" ]; then
+        echo "ver script is up to date."
+    else
+        echo -e "ver script is out of date.\nYour version is $VER_VERSION - latest version is $LATEST_VERSION"
+    fi
+}
+
 case "$1" in
     start | up)
         start
@@ -186,7 +196,7 @@ case "$1" in
     set-up)
         ./project-setup.sh
         ;;
-    make-project)
+    version)
         version
         ;;
     *)
@@ -217,6 +227,7 @@ Available commands:
     lint-install ............................ Install PHP CS Fixer
     new ..................................... Install new empty Laravel project
     set-up .................................. Set up Laravel & run project
+    version ................................. Check ver script version
 
 EOF
         exit 1
