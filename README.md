@@ -52,6 +52,10 @@ ver make-project
 3. Start the project with `ver start`
 4. Export APP_URL to /etc/hosts with `ver hosts`
 
+### (Optional) Enable xDebug
+
+TODO document
+
 ## Production setup
 
 - Remove npm-builder stage from Dockerfile if your project doesn't have any npm dependencies

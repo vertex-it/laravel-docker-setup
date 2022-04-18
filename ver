@@ -1,17 +1,13 @@
 #!/bin/bash
 
-color_green='\033[0;32m'
-color_clear='\033[0m'
+VER_VERSION=1.0.0
 
-# TODO check if needed
-# Source the ".env" file so Laravel's environment variables are available...
 if [ -f ./.env ]; then
     source ./.env
 fi
 
 export APP_PORT=${APP_PORT:-80}
 export APP_SERVICE=${APP_SERVICE:-"app"}
-export DB_PORT=${DB_PORT:-3306} # TODO remove?
 export HOST_UID
 export APP_SHORT_URL
 
@@ -89,13 +85,7 @@ yarn () {
     dockerCompose run --rm frontend yarn "${@:1}"
 }
 
-env () {
-    if [ ! -f .env ]; then
-        cp .env.example .env
-    fi
-}
-
-makeProject () {
+new () {
     docker run -u ${UID}:${UID} --rm -v $(pwd):/app -w /app composer composer create-project --prefer-dist laravel/laravel laravel-app
 
     shopt -s dotglob nullglob
@@ -190,22 +180,14 @@ case "$1" in
     lint-install)
         lintInstall
         ;;
+    new)
+        new
+        ;;
     set-up)
-        echo "1) rm -rf .env vendor composer.lock node_modules package-lock.json" && rm -rf .env vendor composer.lock node_modules package-lock.json \
-            && echo "2) cp .env.example .env" && env \
-            && echo "3) docker-compose down -v" && down -v >/dev/null 2>&1 \
-            && echo "4) docker-compose build" && build >/dev/null 2>&1 \
-            && echo "5) docker-compose up -d" && start \
-            && echo "6) composer install" && composer install >/dev/null 2>&1 \
-            && echo "7) php artisan key:generate" && artisan key:generate >/dev/null 2>&1 \
-            && echo "7) php artisan storage:link" && artisan storage:link >/dev/null 2>&1 \
-            && echo "8) php artisan migrate:fresh --seed" && artisan migrate:fresh --seed \
-            && echo "9) npm install" && npm install >/dev/null 2>&1 \
-            && echo "10) npm run dev" && npm run dev >/dev/null 2>&1 \
-            && echo -e "${color_green}Done. Now go to work!${color_clear}"
+        ./project-setup.sh
         ;;
     make-project)
-        makeProject
+        version
         ;;
     *)
         cat << EOF
@@ -233,8 +215,8 @@ Available commands:
     hosts ................................... Add local app URL to the /etc/hosts file
     lint .................................... Run PHP CS Fixer
     lint-install ............................ Install PHP CS Fixer
-    make-project ............................ Init Laravel project
-    set-up .................................. Set up Laravel & run project.
+    new ..................................... Install new empty Laravel project
+    set-up .................................. Set up Laravel & run project
 
 EOF
         exit 1
