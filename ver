@@ -120,6 +120,8 @@ new () {
     lintInstall
     lint
 
+    git init && git add -A && git commit -m "Initial commit"
+
     source .env && echo "$APP_URL"
 }
 
