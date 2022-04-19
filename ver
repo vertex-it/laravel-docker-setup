@@ -117,6 +117,11 @@ new () {
 
     artisan migrate
 
+    composer require --dev barryvdh/laravel-ide-helper
+    artisan ide-helper:generate && artisan ide-helper:meta && artisan ide-helper:models --write-mixin
+    grep -qxF '_ide_helper*.php' .gitignore || echo '_ide_helper*.php' >> .gitignore
+    grep -qxF '.phpstorm.meta.php' .gitignore || echo '.phpstorm.meta.php' >> .gitignore
+
     lintInstall
     lint
 
