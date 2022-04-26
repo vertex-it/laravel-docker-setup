@@ -11,6 +11,7 @@ ENV XDEBUG_ENABLE ${XDEBUG_ENABLE}
 
 # ------------------------ Nginx & Common PHP Dependencies ------------------------
 RUN apk update && apk add \
+        tzdata \
         nginx \
         # see https://github.com/docker-library/php/issues/880
         oniguruma-dev \
@@ -21,8 +22,12 @@ RUN apk update && apk add \
         # install node & npm
         nodejs npm \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    # Installing common Laravel dependencies
-    && docker-php-ext-install mbstring pdo_mysql gd
+    # Installing common Laravel dependencies \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install exif mbstring pdo_mysql gd
+
+# ------------------------ Set Timezone ------------------------
+ENV TZ=Europe/Sarajevo
 
 # ------------------------ Composer ------------------------
 COPY --from=composer:2.1.12 /usr/bin/composer /usr/bin/composer

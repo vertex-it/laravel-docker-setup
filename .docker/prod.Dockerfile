@@ -29,6 +29,7 @@ WORKDIR /var/www/html
 
 # ------------------------ Nginx & Common PHP Dependencies ------------------------
 RUN apk update && apk add \
+        tzdata \
         nginx \
         # see https://github.com/docker-library/php/issues/880
         oniguruma-dev \
@@ -36,9 +37,13 @@ RUN apk update && apk add \
         freetype-dev libpng-dev libjpeg libjpeg-turbo-dev \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     # Installing common Laravel dependencies
-    && docker-php-ext-install mbstring pdo_mysql gd \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install exif mbstring pdo_mysql gd \
     	# Adding opcache
     	opcache
+
+# ------------------------ Set Timezone ------------------------
+ENV TZ=Europe/Sarajevo
 
 # ------------------------ Add s6 overlay ------------------------
 ADD https://github.com/just-containers/s6-overlay/releases/download/v2.1.0.2/s6-overlay-amd64-installer /tmp/
