@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine3.15
+FROM php:8.1-alpine3.17
 
 LABEL maintainer="Mile Panić"
 
@@ -30,7 +30,7 @@ RUN apk update && apk add \
 ENV TZ=Europe/Sarajevo
 
 # ------------------------ Composer ------------------------
-COPY --from=composer:2.1.12 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.5.4 /usr/bin/composer /usr/bin/composer
 
 # ------------------------ Add s6 overlay ------------------------
 ADD https://github.com/just-containers/s6-overlay/releases/download/v2.1.0.2/s6-overlay-amd64-installer /tmp/
