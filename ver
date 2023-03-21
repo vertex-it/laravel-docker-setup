@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VER_VERSION=1.1.0
+VER_VERSION=1.2.0
 
 if [ -f ./.env ]; then
     source ./.env
@@ -22,7 +22,7 @@ APP_SHORT_URL=$(echo "${APP_URL:-"localhost"}" | sed "s/https\?:\/\///")
 #######################################
 
 dockerCompose () {
-    docker-compose -f docker-compose.yml -f docker-compose.dev.yml "${@:1}"
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml "${@:1}"
 }
 
 # Run an Artisan command
