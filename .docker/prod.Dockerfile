@@ -21,7 +21,7 @@ RUN npm ci
 RUN npm run production
 
 # Build production image
-FROM php:8.1-alpine3.17 as final
+FROM php:8.1-fpm-alpine3.17 as final
 
 LABEL maintainer="Mile Panić"
 
