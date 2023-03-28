@@ -35,6 +35,12 @@ RUN apk update && apk add \
         oniguruma-dev \
         # needed for gd
         freetype-dev libpng-dev libjpeg libjpeg-turbo-dev \
+        # install redis
+        pcre-dev \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apk del pcre-dev ${PHPIZE_DEPS} \
+    && rm -rf /tmp/pear \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     # Installing common Laravel dependencies
     && docker-php-ext-configure gd --with-freetype --with-jpeg \

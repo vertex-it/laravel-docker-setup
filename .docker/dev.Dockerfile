@@ -21,6 +21,12 @@ RUN apk update && apk add \
 		$PHPIZE_DEPS \
         # install node & npm
         nodejs npm \
+        # install redis
+        pcre-dev \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apk del pcre-dev ${PHPIZE_DEPS} \
+    && rm -rf /tmp/pear \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     # Installing common Laravel dependencies \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \

@@ -36,6 +36,11 @@ services:
         volumes:
             - mysqldata:/var/lib/mysql
 
+    redis:
+        image: redis:7.0.10-alpine3.17
+        volumes:
+            - redisdata:/data
+
 #    ofelia:
 #        image: mcuadros/ofelia:v0.3.6
 #        command: daemon --docker
