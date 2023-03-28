@@ -240,8 +240,8 @@ case "$1" in
     new)
         new
         ;;
-    set-up)
-        ./project-setup.sh
+    init)
+        ./app-init.sh
         ;;
     version)
         version
