@@ -219,7 +219,7 @@ case "$1" in
         dockerCompose logs -f "${@:2}"
         ;;
     shell)
-        dockerCompose exec -u dkuser "$APP_SERVICE" sh
+        dockerCompose exec -u dkuser "$APP_SERVICE" zsh
         ;;
     exec)
         exec "${@:2}"

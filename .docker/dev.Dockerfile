@@ -23,6 +23,9 @@ RUN apk update && apk add \
         nodejs npm \
         # install redis
         pcre-dev \
+        git \
+        curl \
+        zsh \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && apk del pcre-dev ${PHPIZE_DEPS} \
@@ -69,6 +72,17 @@ RUN rm -rf /var/cache/apk/* && \
 # ------------------------ Create user based on provided user id and chown all files ------------------------
 RUN adduser --disabled-password --gecos "" --uid $HOST_UID dkuser \
     && chown -R dkuser:dkuser /var/www/html
+
+# Uses "Spaceship" theme with some customization. Uses some bundled plugins and installs some more from github
+USER dkuser
+RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh)" -- \
+    -t robbyrussell \
+    -a 'alias art="php artisan"' \
+    -p git \
+    -p https://github.com/zsh-users/zsh-autosuggestions \
+    -p https://github.com/zsh-users/zsh-completions
+
+USER root
 
 EXPOSE 80
 
