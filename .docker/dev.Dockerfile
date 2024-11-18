@@ -16,7 +16,7 @@ RUN apk update && apk add \
         # see https://github.com/docker-library/php/issues/880
         oniguruma-dev \
         # needed for gd
-        freetype-dev libpng-dev libjpeg libjpeg-turbo-dev \
+        freetype-dev libpng-dev libwebp-dev libjpeg libjpeg-turbo-dev \
 		# needed for xdebug
 		$PHPIZE_DEPS \
         # install node & npm
@@ -32,7 +32,7 @@ RUN apk update && apk add \
     && rm -rf /tmp/pear \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     # Installing common Laravel dependencies \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install exif mbstring pdo_mysql gd
 
 # ------------------------ Set Timezone ------------------------
