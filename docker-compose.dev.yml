@@ -14,10 +14,8 @@ services:
     mysql:
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
-
-#    testdb:
-#        image: mysql:8
-#        tmpfs: /var/lib/mysql
+        volumes:
+            - ./.docker/mysql:/docker-entrypoint-initdb.d
 
 #    localtunnel:
 #        image: efrecon/localtunnel

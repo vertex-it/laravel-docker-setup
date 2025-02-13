@@ -11,6 +11,8 @@ rm -rf ./dockerize/.git ./dockerize/README.md ./dockerize/dockerize.sh ./dockeri
 shopt -s dotglob nullglob
 mv ./dockerize/* .
 
+cp ./.docker/phpunit/phpunit.xml phpunit.xml
+
 rm -rf ./dockerize
 
 echo 'Done. Enter the command "./ver" to run the CLI.'
